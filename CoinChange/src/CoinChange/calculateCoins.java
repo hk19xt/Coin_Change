@@ -5,7 +5,12 @@ import java.util.*;
 public class calculateCoins {
    public static Map<Integer, ArrayList<ArrayList<Integer>> > calculate = new HashMap<>();
 
-   private static void calculate(int sum, ArrayList<Integer> userCoins, ArrayList<Integer> partial){
+   static void result(){
+
+   };
+
+
+   static void calculate(int sum, ArrayList<Integer> userCoins, ArrayList<Integer> partial){
       boolean bool = false;
       int empty = 0;
       if(bool){
@@ -45,17 +50,35 @@ public class calculateCoins {
          reducedArray.remove(aCoin);
          ArrayList<Integer> partialArrays = new ArrayList<>(partial);
 
+         //If the sum is larger than a coin, then we can use this coin for calculation.
+         if(sum>aCoin){
+            partialArrays.add(aCoin);
+            calculate(sum-aCoin, array, partialArrays);
+            continue;
+         }
+
+         //If the sum is the same as the coin, then this coin is the final coin for calculation.
          if(sum==aCoin){
             finalSolution(array,0);
+            continue;
+         }
+
+         //If the sum is smaller than a coin, then we can't use this coin for calculation.
+         if(sum<aCoin){
+            calculate(sum, array, partialArrays);
             continue;
          }
       }
 
 
-
    }
    private static void finalSolution(ArrayList<Integer> finalSolution, int partial){
-      int
+      int sum = finalSolution.stream().mapToInt(coins -> coins.intValue()).sum() + partial;
+      ArrayList<ArrayList<Integer>> addedSolutions = calculate.get(sum);
+      if(!addedSolutions.contains(finalSolution)){
+         addedSolutions.add(finalSolution);
+         calculate.put(sum, addedSolutions);
+      }
    }
 
 }
